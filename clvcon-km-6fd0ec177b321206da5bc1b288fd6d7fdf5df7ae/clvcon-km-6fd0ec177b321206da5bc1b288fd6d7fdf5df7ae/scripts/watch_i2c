@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rmmod clovercon
+insmod clovercon.ko
+watch -n 1 'rmmod clovercon && insmod clovercon.ko && dmesg | tail -n 20'

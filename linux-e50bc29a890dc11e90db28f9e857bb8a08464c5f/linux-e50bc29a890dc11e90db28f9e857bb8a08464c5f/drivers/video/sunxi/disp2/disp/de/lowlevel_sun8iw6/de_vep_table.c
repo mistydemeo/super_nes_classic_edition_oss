@@ -1,0 +1,56 @@
+//*********************************************************************************************************************
+//  All Winner Tech, All Right Reserved. 2014-2015 Copyright (c)
+//
+//  File name   :	de_vep_table.c
+//
+//  Description :	display engine 2.0 video enhancement processor common fir table coefficients
+//
+//  History     :	2014/03/28  iptang  v0.1  Initial version
+//
+//*********************************************************************************************************************
+
+int y2r[36]=
+{
+	//bt601
+	0x000004a7,0x00000000,0x00000622,0xFFFC8640,//RY,RU,RV,RC
+	0x000004a7,0xFFFFFE6F,0xFFFFFCBF,0x00021FC0,//GY,GU,GV,GC
+	0x000004a7,0x00000812,0x00000000,0xFFFBAE40,//BY,BU,BV,BC
+
+	//bt709
+	0x000004A8,0x00000000,0x00000662,0xFFFC865A,
+	0x000004A8,0xFFFFFE70,0xFFFFFCBF,0x00021FF4,
+	0x000004A8,0x00000812,0x00000000,0xFFFBAE4A,
+
+	//ycc
+	0x00000400,0x00000000,0x0000064D,0xFFFCDB9A,
+	0x00000400,0xFFFFFF41,0xFFFFFE21,0x0001515C,
+	0x00000400,0x0000076D,0x00000000,0xFFFC4BBA
+
+};
+
+int r2y[36]=
+{
+	//bt601
+	0x00000400,0x00000000,0x0000064D,0xFFFCDB9A,
+	0x00000400,0xFFFFFF41,0xFFFFFE21,0x0001515C,
+	0x00000400,0x0000076D,0x00000000,0xFFFC4BBA,
+
+	//bt709
+	0x00000400,0x00000000,0x0000064D,0xFFFCDB9A,
+	0x00000400,0xFFFFFF41,0xFFFFFE21,0x0001515C,
+	0x00000400,0x0000076D,0x00000000,0xFFFC4BBA,
+
+	//ycc
+	0x00000400,0x00000000,0x0000064D,0xFFFCDB9A,
+	0x00000400,0xFFFFFF41,0xFFFFFE21,0x0001515C,
+	0x00000400,0x0000076D,0x00000000,0xFFFC4BBA
+
+};
+
+int fcc_range_gain[14]=
+{
+	0x01550eaa,0x07050333,0x0bdd084f,0x0a000705,
+	0x0eaa0bdd,0x03330155,0x00000000,0x00000000,
+	0x00000000,0x00000000,0x00000000,0x00000000,
+	0x00000000,0x00000000
+};

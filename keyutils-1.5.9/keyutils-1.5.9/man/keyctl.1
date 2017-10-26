@@ -1,0 +1,763 @@
+.\"
+.\" Copyright (C) 2004 Red Hat, Inc. All Rights Reserved.
+.\" Written by David Howells (dhowells@redhat.com)
+.\"
+.\" This program is free software; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License
+.\" as published by the Free Software Foundation; either version
+.\" 2 of the License, or (at your option) any later version.
+.\"
+.TH KEYCTL 1 "20 Feb 2014" Linux "Linux Key Management Utilities"
+.SH NAME
+keyctl - Key management facility control
+.SH SYNOPSIS
+\fBkeyctl\fR --version
+.br
+\fBkeyctl\fR show [-x] [<keyring>]
+.br
+\fBkeyctl\fR add <type> <desc> <data> <keyring>
+.br
+\fBkeyctl\fR padd <type> <desc> <keyring>
+.br
+\fBkeyctl\fR request <type> <desc> [<dest_keyring>]
+.br
+\fBkeyctl\fR request2 <type> <desc> <info> [<dest_keyring>]
+.br
+\fBkeyctl\fR prequest2 <type> <desc> [<dest_keyring>]
+.br
+\fBkeyctl\fR update <key> <data>
+.br
+\fBkeyctl\fR pupdate <key>
+.br
+\fBkeyctl\fR newring <name> <keyring>
+.br
+\fBkeyctl\fR revoke <key>
+.br
+\fBkeyctl\fR clear <keyring>
+.br
+\fBkeyctl\fR link <key> <keyring>
+.br
+\fBkeyctl\fR unlink <key> [<keyring>]
+.br
+\fBkeyctl\fR search <keyring> <type> <desc> [<dest_keyring>]
+.br
+\fBkeyctl\fR read <key>
+.br
+\fBkeyctl\fR pipe <key>
+.br
+\fBkeyctl\fR print <key>
+.br
+\fBkeyctl\fR list <keyring>
+.br
+\fBkeyctl\fR rlist <keyring>
+.br
+\fBkeyctl\fR describe <keyring>
+.br
+\fBkeyctl\fR rdescribe <keyring> [sep]
+.br
+\fBkeyctl\fR chown <key> <uid>
+.br
+\fBkeyctl\fR chgrp <key> <gid>
+.br
+\fBkeyctl\fR setperm <key> <mask>
+.br
+\fBkeyctl\fR new_session
+.br
+\fBkeyctl\fR session
+.br
+\fBkeyctl\fR session - [<prog> <arg1> <arg2> ...]
+.br
+\fBkeyctl\fR session <name> [<prog> <arg1> <arg2> ...]
+.br
+\fBkeyctl\fR instantiate <key> <data> <keyring>
+.br
+\fBkeyctl\fR pinstantiate <key> <keyring>
+.br
+\fBkeyctl\fR negate <key> <timeout> <keyring>
+.br
+\fBkeyctl\fR reject <key> <timeout> <error> <keyring>
+.br
+\fBkeyctl\fR timeout <key> <timeout>
+.br
+\fBkeyctl\fR security <key>
+.br
+\fBkeyctl\fR reap [-v]
+.br
+\fBkeyctl\fR purge <type>
+.br
+\fBkeyctl\fR purge [-i] [-p] <type> <desc>
+.br
+\fBkeyctl\fR purge -s <type> <desc>
+.br
+\fBkeyctl\fR get_persistent <keyring> [<uid>]
+.SH DESCRIPTION
+This program is used to control the key management facility in various ways
+using a variety of subcommands.
+.SH KEY IDENTIFIERS
+.P
+The key identifiers passed to or returned from keyctl are, in general, positive
+integers. There are, however, some special values with special meanings that
+can be passed as arguments:
+.P
+(*) No key: \fB0\fR
+.P
+(*) Thread keyring: \fB@t\fR or \fB-1\fR
+.P
+Each thread may have its own keyring. This is searched first, before all
+others. The thread keyring is replaced by (v)fork, exec and clone.
+.P
+(*) Process keyring: \fB@p\fR or \fB-2\fR
+.P
+Each process (thread group) may have its own keyring. This is shared between
+all members of a group and will be searched after the thread keyring. The
+process keyring is replaced by (v)fork and exec.
+.P
+(*) Session keyring: \fB@s\fR or \fB-3\fR
+.P
+Each process subscribes to a session keyring that is inherited across (v)fork,
+exec and clone. This is searched after the process keyring. Session keyrings
+can be named and an extant keyring can be joined in place of a process's
+current session keyring.
+.P
+(*) User specific keyring: \fB@u\fR or \fB-4\fR
+.P
+This keyring is shared between all the processes owned by a particular user. It
+isn't searched directly, but is normally linked to from the session keyring.
+.P
+(*) User default session keyring: \fB@us\fR or \fB-5\fR
+.P
+This is the default session keyring for a particular user. Login processes that
+change to a particular user will bind to this session until another session is
+set.
+.P
+(*) Group specific keyring: \fB@g\fR or \fB-6\fR
+.P
+This is a place holder for a group specific keyring, but is not actually
+implemented yet in the kernel.
+.P
+(*) Assumed request_key authorisation key: \fB@a\fR or \fB-7\fR
+.P
+This selects the authorisation key provided to the request_key() helper to
+permit it to access the callers keyrings and instantiate the target key.
+.P
+(*) Keyring by name: \fB%:<name>\fR
+.P
+A named keyring.  This will be searched for in the process's keyrings and in
+/proc/keys.
+.P
+(*) Key by name: \fB%<type>:<name>\fR
+.P
+A named key of the given type.  This will be searched for in the process's
+keyrings and in /proc/keys.
+.SH COMMAND SYNTAX
+Any non-ambiguous shortening of a command name may be used in lieu of the full
+command name. This facility should not be used in scripting as new commands may
+be added in future that then cause ambiguity.
+.P
+(*) \fBDisplay the package version number\fR
+.P
+\fBkeyctl --version\fR
+.P
+This command prints the package version number and build date and exits:
+.P
+.RS
+testbox>keyctl --version
+.br
+keyctl from keyutils-1.5.3 (Built 2011-08-24)
+.RE
+.P
+(*) \fBShow process keyrings\fR
+.P
+\fBkeyctl show [-x] [<keyring>]\fR
+.P
+By default this command recursively shows what keyrings a process is subscribed
+to and what keys and keyrings they contain.  If a keyring is specified then
+that keyring will be dumped instead.  If \fB-x\fR is specified then the keyring
+IDs will be dumped in hex instead of decimal.
+.P
+(*) \fBAdd a key to a keyring\fR
+.P
+\fBkeyctl add\fR <type> <desc> <data> <keyring>
+.br
+\fBkeyctl padd\fR <type> <desc> <keyring>
+.P
+This command creates a key of the specified type and description; instantiates
+it with the given data and attaches it to the specified keyring. It then prints
+the new key's ID on stdout:
+.P
+.RS
+testbox>keyctl add user mykey stuff @u
+.br
+26
+.RE
+.P
+The \fBpadd\fR variant of the command reads the data from stdin rather than
+taking it from the command line:
+.P
+.RS
+testbox>echo -n stuff | keyctl padd user mykey @u
+.br
+26
+.RE
+.P
+(*) \fBRequest a key\fR
+.P
+\fBkeyctl request\fR <type> <desc> [<dest_keyring>]
+.br
+\fBkeyctl request2\fR <type> <desc> <info> [<dest_keyring>]
+.br
+\fBkeyctl prequest2\fR <type> <desc> [<dest_keyring>]
+.P
+These three commands request the lookup of a key of the given type and
+description. The process's keyrings will be searched, and if a match is found
+the matching key's ID will be printed to stdout; and if a destination keyring
+is given, the key will be added to that keyring also.
+.P
+If there is no key, the first command will simply return the error ENOKEY and
+fail. The second and third commands will create a partial key with the type and
+description, and call out to \fB/sbin/request-key\fR with that key and the
+extra information supplied. This will then attempt to instantiate the key in
+some manner, such that a valid key is obtained.
+.P
+The third command is like the second, except that the callout information is
+read from stdin rather than being passed on the command line.
+.P
+If a valid key is obtained, the ID will be printed and the key attached as if
+the original search had succeeded.
+.P
+If there wasn't a valid key obtained, a temporary negative key will be attached
+to the destination keyring if given and the error "Requested key not available"
+will be given.
+.P
+.RS
+testbox>keyctl request2 user debug:hello wibble
+.br
+23
+.br
+testbox>echo -n wibble | keyctl prequest2 user debug:hello
+.br
+23
+.br
+testbox>keyctl request user debug:hello
+.br
+23
+.RE
+.P
+(*) \fBUpdate a key\fR
+.P
+\fBkeyctl update\fR <key> <data>
+.br
+\fBkeyctl pupdate\fR <key>
+.P
+This command replaces the data attached to a key with a new set of data. If the
+type of the key doesn't support update then error "Operation not supported"
+will be returned.
+.P
+.RS
+testbox>keyctl update 23 zebra
+.RE
+.P
+The \fBpupdate\fR variant of the command reads the data from stdin rather than
+taking it from the command line:
+.P
+.RS
+testbox>echo -n zebra | keyctl pupdate 23
+.RE
+.P
+(*) \fBCreate a keyring\fR
+.P
+\fBkeyctl newring\fR <name> <keyring>
+.P
+This command creates a new keyring of the specified name and attaches it to the
+specified keyring. The ID of the new keyring will be printed to stdout if
+successful.
+.P
+.RS
+testbox>keyctl newring squelch @us
+.br
+27
+.RE
+.P
+(*) \fBRevoke a key\fR
+.P
+\fBkeyctl revoke\fR <key>
+.P
+This command marks a key as being revoked. Any further operations on that key
+(apart from unlinking it) will return error "Key has been revoked".
+.P
+.RS
+testbox>keyctl revoke 26
+.br
+testbox>keyctl describe 26
+.br
+keyctl_describe: Key has been revoked
+.RE
+.P
+(*) \fBClear a keyring\fR
+.P
+\fBkeyctl clear\fR <keyring>
+.P
+This command unlinks all the keys attached to the specified keyring. Error
+"Not a directory" will be returned if the key specified is not a keyring.
+.P
+.RS
+testbox>keyctl clear 27
+.RE
+.P
+(*) \fBLink a key to a keyring\fR
+.P
+\fBkeyctl link\fR <key> <keyring>
+.P
+This command makes a link from the key to the keyring if there's enough
+capacity to do so. Error "Not a directory" will be returned if the destination
+is not a keyring. Error "Permission denied" will be returned if the key doesn't
+have link permission or the keyring doesn't have write permission. Error "File
+table overflow" will be returned if the keyring is full. Error "Resource
+deadlock avoided" will be returned if an attempt was made to introduce a
+recursive link.
+.P
+.RS
+testbox>keyctl link 23 27
+.br
+testbox>keyctl link 27 27
+.br
+keyctl_link: Resource deadlock avoided
+.RE
+.P
+(*) \fBUnlink a key from a keyring or the session keyring tree\fR
+.P
+\fBkeyctl unlink\fR <key> [<keyring>]
+.P
+If the keyring is specified, this command removes a link to the key from the
+keyring. Error "Not a directory" will be returned if the destination is not a
+keyring. Error "Permission denied" will be returned if the keyring doesn't have
+write permission. Error "No such file or directory" will be returned if the key
+is not linked to by the keyring.
+.P
+If the keyring is not specified, this command performs a depth-first search of
+the session keyring tree and removes all the links to the nominated key that it
+finds (and that it is permitted to remove).  It prints the number of successful
+unlinks before exiting.
+.P
+.RS
+testbox>keyctl unlink 23 27
+.RE
+.P
+(*) \fBSearch a keyring\fR
+.P
+\fBkeyctl search\fR <keyring> <type> <desc> [<dest_keyring>]
+.P
+This command non-recursively searches a keyring for a key of a particular type
+and description. If found, the ID of the key will be printed on stdout and the
+key will be attached to the destination keyring if present. Error "Requested
+key not available" will be returned if the key is not found.
+.P
+.RS
+testbox>keyctl search @us user debug:hello
+.br
+23
+.br
+testbox>keyctl search @us user debug:bye
+.br
+keyctl_search: Requested key not available
+.RE
+.P
+(*) \fBRead a key\fR
+.P
+\fBkeyctl read\fR <key>
+.br
+\fBkeyctl pipe\fR <key>
+.br
+\fBkeyctl print\fR <key>
+.P
+These commands read the payload of a key. "read" prints it on stdout as a hex
+dump, "pipe" dumps the raw data to stdout and "print" dumps it to stdout
+directly if it's entirely printable or as a hexdump preceded by ":hex:" if not.
+.P
+If the key type does not support reading of the payload, then error "Operation
+not supported" will be returned.
+.P
+.RS
+testbox>keyctl read 26
+.br
+1 bytes of data in key:
+.br
+62
+.br
+testbox>keyctl print 26
+.br
+b
+.br
+testbox>keyctl pipe 26
+.br
+btestbox>
+.RE
+.P
+(*) \fBList a keyring\fR
+.P
+\fBkeyctl list\fR <keyring>
+.br
+\fBkeyctl rlist\fR <keyring>
+.P
+These commands list the contents of a key as a keyring. "list" pretty prints
+the contents and "rlist" just produces a space-separated list of key IDs.
+.P
+No attempt is made to check that the specified keyring is a keyring.
+.P
+.RS
+testbox>keyctl list @us
+.br
+2 keys in keyring:
+.br
+       22: vrwsl----------  4043    -1 keyring: _uid.4043
+.br
+       23: vrwsl----------  4043  4043 user: debug:hello
+.br
+testbox>keyctl rlist @us
+.br
+22 23
+.RE
+.P
+(*) \fBDescribe a key\fR
+.P
+\fBkeyctl describe\fR <keyring>
+.br
+\fBkeyctl rdescribe\fR <keyring> [sep]
+.P
+These commands fetch a description of a keyring. "describe" pretty prints the
+description in the same fashion as the "list" command; "rdescribe" prints the
+raw data returned from the kernel.
+.P
+.RS
+testbox>keyctl describe @us
+       -5: vrwsl----------  4043    -1 keyring: _uid_ses.4043
+testbox>keyctl rdescribe @us
+keyring;4043;-1;3f1f0000;_uid_ses.4043
+.RE
+.P
+The raw string is "<type>;<uid>;<gid>;<perms>;<description>", where \fIuid\fR
+and \fIgid\fR are the decimal user and group IDs, \fIperms\fR is the
+permissions mask in hex, \fItype\fR and \fIdescription\fR are the type name and
+description strings (neither of which will contain semicolons).
+.P
+(*) \fBChange the access controls on a key\fR
+.P
+\fBkeyctl chown\fR <key> <uid>
+.br
+\fBkeyctl chgrp\fR <key> <gid>
+.P
+These two commands change the UID and GID associated with evaluating a key's
+permissions mask. The UID also governs which quota a key is taken out of.
+.P
+The chown command is not currently supported; attempting it will earn the error
+"Operation not supported" at best.
+.P
+For non-superuser users, the GID may only be set to the process's GID or a GID
+in the process's groups list. The superuser may set any GID it likes.
+.P
+.RS
+testbox>sudo keyctl chown 27 0
+.br
+keyctl_chown: Operation not supported
+.br
+testbox>sudo keyctl chgrp 27 0
+.RE
+.P
+(*) \fBSet the permissions mask on a key\fR
+.P
+\fBkeyctl setperm\fR <key> <mask>
+.P
+This command changes the permission control mask on a key. The mask may be
+specified as a hex number if it begins "0x", an octal number if it begins "0"
+or a decimal number otherwise.
+.P
+The hex numbers are a combination of:
+.P
+.RS
+Possessor UID       GID       Other     Permission Granted
+.br
+========  ========  ========  ========  ==================
+.br
+01000000  00010000  00000100  00000001  View
+.br
+02000000  00020000  00000200  00000002  Read
+.br
+04000000  00040000  00000400  00000004  Write
+.br
+08000000  00080000  00000800  00000008  Search
+.br
+10000000  00100000  00001000  00000010  Link
+.br
+20000000  00200000  00002000  00000020  Set Attribute
+.br
+3f000000  003f0000  00003f00  0000003f  All
+.RE
+.P
+\fIView\fR permits the type, description and other parameters of a key to be
+viewed.
+.P
+\fIRead\fR permits the payload (or keyring list) to be read if supported by the
+type.
+.P
+\fIWrite\fR permits the payload (or keyring list) to be modified or updated.
+.P
+\fISearch\fR on a key permits it to be found when a keyring to which it is
+linked is searched.
+.P
+\fILink\fR permits a key to be linked to a keyring.
+.P
+\fISet Attribute\fR permits a key to have its owner, group membership,
+permissions mask and timeout changed.
+.P
+.RS
+testbox>keyctl setperm 27 0x1f1f1f00
+.RE
+.P
+(*) \fBStart a new session with fresh keyrings\fR
+.P
+\fBkeyctl session\fR
+.br
+\fBkeyctl session\fR - [<prog> <arg1> <arg2> ...]
+.br
+\fBkeyctl session\fR <name> [<prog> <arg1> <arg2> ...]
+.P
+These commands join or create a new keyring and then run a shell or other
+program with that keyring as the session key.
+.P
+The variation with no arguments just creates an anonymous session keyring and
+attaches that as the session keyring; it then exec's $SHELL.
+.P
+The variation with a dash in place of a name creates an anonymous session
+keyring and attaches that as the session keyring; it then exec's the supplied
+command, or $SHELL if one isn't supplied.
+.P
+The variation with a name supplied creates or joins the named keyring and
+attaches that as the session keyring; it then exec's the supplied command, or
+$SHELL if one isn't supplied.
+.P
+.RS
+testbox>keyctl rdescribe @s
+.br
+keyring;4043;-1;3f1f0000;_uid_ses.4043
+.P
+testbox>keyctl session
+.br
+Joined session keyring: 28
+.br
+testbox>keyctl rdescribe @s
+.br
+keyring;4043;4043;3f1f0000;_ses.24082
+.P
+testbox>keyctl session -
+.br
+Joined session keyring: 29
+.br
+testbox>keyctl rdescribe @s
+.br
+keyring;4043;4043;3f1f0000;_ses.24139
+.P
+testbox>keyctl session - keyctl rdescribe @s
+.br
+Joined session keyring: 30
+.br
+keyring;4043;4043;3f1f0000;_ses.24185
+.P
+testbox>keyctl session fish 
+.br
+Joined session keyring: 34
+.br
+testbox>keyctl rdescribe @s
+.br
+keyring;4043;4043;3f1f0000;fish
+.P
+testbox>keyctl session fish keyctl rdesc @s
+.br
+Joined session keyring: 35
+.br
+keyring;4043;4043;3f1f0000;fish
+.RE
+.P
+(*) \fBInstantiate a key\fR
+.P
+\fBkeyctl instantiate\fR <key> <data> <keyring>
+.br
+\fBkeyctl pinstantiate\fR <key> <keyring>
+.br
+\fBkeyctl negate\fR <key> <timeout> <keyring>
+.br
+\fBkeyctl reject\fR <key> <timeout> <error> <keyring>
+.P
+These commands are used to attach data to a partially set up key (as created by
+the kernel and passed to /sbin/request-key).  "instantiate" marks a key as
+being valid and attaches the data as the payload.  "negate" and "reject" mark a
+key as invalid and sets a timeout on it so that it'll go away after a while.
+This prevents a lot of quickly sequential requests from slowing the system down
+overmuch when they all fail, as all subsequent requests will then fail with
+error "Requested key not found" (if negated) or the specified error (if
+rejected) until the negative key has expired.
+.P
+Reject's error argument can either be a UNIX error number or one of
+.BR "" "'" rejected "', '" expired "' or '" revoked "'."
+.P
+The newly instantiated key will be attached to the specified keyring.
+.P
+These commands may only be run from the program run by request-key - a special
+authorisation key is set up by the kernel and attached to the request-key's
+session keyring. This special key is revoked once the key to which it refers
+has been instantiated one way or another.
+.P
+.RS
+testbox>keyctl instantiate $1 "Debug $3" $4
+.br
+testbox>keyctl negate $1 30 $4
+.br
+testbox>keyctl reject $1 30 64 $4
+.RE
+.P
+The \fBpinstantiate\fR variant of the command reads the data from stdin rather
+than taking it from the command line:
+.P
+.RS
+testbox>echo -n "Debug $3" | keyctl pinstantiate $1 $4
+.RE
+.P
+(*) \fBSet the expiry time on a key\fR
+.P
+\fBkeyctl timeout\fR <key> <timeout>
+.P
+This command is used to set the timeout on a key, or clear an existing timeout
+if the value specified is zero. The timeout is given as a number of seconds
+into the future.
+.P
+.RS
+testbox>keyctl timeout $1 45
+.RE
+.P
+(*) \fBRetrieve a key's security context\fR
+.P
+\fBkeyctl security\fR <key>
+.P
+This command is used to retrieve a key's LSM security context.  The label is
+printed on stdout.
+.P
+.RS
+testbox>keyctl security @s
+.br
+unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+.RE
+.P
+(*) \fBGive the parent process a new session keyring\fR
+.P
+\fBkeyctl new_session\fR
+.P
+This command is used to give the invoking process (typically a shell) a new
+session keyring, discarding its old session keyring.
+.P
+.RS
+testbox> keyctl session foo
+.br
+Joined session keyring: 723488146
+.br
+testbox> keyctl show
+.br
+Session Keyring
+.br
+       -3 --alswrv      0     0  keyring: foo
+.br
+testbox> keyctl new_session
+.br
+490511412
+.br
+testbox> keyctl show
+.br
+Session Keyring
+.br
+       -3 --alswrv      0     0  keyring: _ses
+.RE
+.P
+Note that this affects the \fIparent\fP of the process that invokes the system
+call, and so may only affect processes with matching credentials.
+Furthermore, the change does not take effect till the parent process next
+transitions from kernel space to user space - typically when the \fBwait\fP()
+system call returns.
+.P
+(*) \fBRemove dead keys from the session keyring tree\fR
+.P
+\fBkeyctl reap\fR
+.P
+This command performs a depth-first search of the caller's session keyring tree
+and attempts to unlink any key that it finds that is inaccessible due to
+expiry, revocation, rejection or negation.  It does not attempt to remove live
+keys that are unavailable simply due to a lack of granted permission.
+.P
+A key that is designated reapable will only be removed from a keyring if the
+caller has Write permission on that keyring, and only keyrings that grant
+Search permission to the caller will be searched.
+.P
+The command prints the number of keys reaped before it exits.  If the \fB-v\fR
+flag is passed then the reaped keys are listed as they're being reaped,
+together with the success or failure of the unlink.
+.P
+(*) \fBRemove matching keys from the session keyring tree\fR
+.P
+\fBkeyctl\fR purge <type>
+.br
+\fBkeyctl\fR purge [-i] [-p] <type> <desc>
+.br
+\fBkeyctl\fR purge -s <type> <desc>
+.P
+These commands perform a depth-first search to find matching keys in the
+caller's session keyring tree and attempts to unlink them.  The number of
+keys successfully unlinked is printed at the end.
+.P
+The keyrings must grant Read and View permission to the caller to be searched,
+and the keys to be removed must also grant View permission.  Keys can only be
+removed from keyrings that grant Write permission.
+.P
+The first variant purges all keys of the specified type.
+.P
+The second variant purges all keys of the specified type that also match the
+given description literally.  The -i flag allows a case-independent match and
+the -p flag allows a prefix match.
+.P
+The third variant purges all keys of the specified type and matching
+description using the key type's comparator in the kernel to match the
+description.  This permits the key type to match a key with a variety of
+descriptions.
+.P
+(*) \fBGet persistent keyring\fR
+.P
+\fBkeyctl\fR get_persistent <keyring> [<uid>]
+.P
+This command gets the persistent keyring for either the current UID or the
+specified UID and attaches it to the nominated keyring.  The persistent
+keyring's ID will be printed on stdout.
+.P
+The kernel will create the keyring if it doesn't exist and every time this
+command is called, will reset the expiration timeout on the keyring to the
+value in:
+.IP
+/proc/sys/kernel/keys/persistent_keyring_expiry
+.P
+(by default three days).  Should the timeout be reached, the persistent keyring
+will be removed and everything it pins can then be garbage collected.
+.P
+If a UID other than the process's real or effective UIDs is specified, then an
+error will be given if the process does not have the CAP_SETUID capability.
+.P
+.SH ERRORS
+.P
+There are a number of common errors returned by this program:
+.P
+"Not a directory" - a key wasn't a keyring.
+.P
+"Requested key not found" - the looked for key isn't available.
+.P
+"Key has been revoked" - a revoked key was accessed.
+.P
+"Key has expired" - an expired key was accessed.
+.P
+"Permission denied" - permission was denied by a UID/GID/mask combination.
+
+.SH SEE ALSO
+\fBkeyctl\fR(1), \fBrequest-key.conf\fR(5)

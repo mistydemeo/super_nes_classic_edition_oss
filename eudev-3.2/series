@@ -1,0 +1,3 @@
+0001-Only-use-pragma-for-ignoring-diagnostics-if-.patch
+0002-src-shared-missing.h-fix-getrandom-system-call-numbe.patch
+0003-do-not-open-dev-kmsg-for-printf.patch

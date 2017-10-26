@@ -1,0 +1,25 @@
+diff --git a/src/udev/udevd.c b/src/udev/udevd.c
+index 9c33eba5d..198477dda 100644
+--- a/src/udev/udevd.c
++++ b/src/udev/udevd.c
+@@ -1123,7 +1123,6 @@ static int parse_argv(int argc, char *argv[]) {
+ int main(int argc, char *argv[]) {
+         struct udev *udev;
+         sigset_t mask;
+-        FILE *f;
+         int fd_ctrl = -1;
+         int fd_netlink = -1;
+         int fd_worker = -1;
+@@ -1276,12 +1275,6 @@ int main(int argc, char *argv[]) {
+ 
+         udev_list_node_init(&event_list);
+ 
+-        f = fopen("/dev/kmsg", "w");
+-        if (f != NULL) {
+-                fprintf(f, "<30>udevd[%u]: starting eudev-" VERSION "\n", getpid());
+-                fclose(f);
+-        }
+-
+         if (!arg_debug) {
+                 int fd;
+ 

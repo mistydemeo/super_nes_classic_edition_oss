@@ -1,0 +1,6 @@
+---
+DisableFormat: false
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+PointerAlignment: Left
+...

@@ -1,0 +1,758 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Project[
+  <!ELEMENT Project (OptionList,Localize?,OptionValues,DefaultValues?)>
+  <!ATTLIST Project
+    Platform CDATA #REQUIRED
+    Version CDATA #REQUIRED
+    Type CDATA #REQUIRED
+  >
+  <!ELEMENT OptionList (Tool*)>
+  <!ELEMENT Tool (Category|Option)*>
+  <!ATTLIST Tool
+    Name CDATA #REQUIRED
+    Disp CDATA #IMPLIED
+    Allow CDATA #IMPLIED
+    Deny CDATA #IMPLIED
+  >
+  <!ELEMENT Category (Option*)>
+  <!ATTLIST Category
+    Name CDATA #REQUIRED
+    Disp CDATA #IMPLIED
+    Allow CDATA #IMPLIED
+    Deny CDATA #IMPLIED
+  >
+  <!ELEMENT Option ANY>
+  <!ATTLIST Option
+    Name CDATA #REQUIRED
+    Disp CDATA #IMPLIED
+    Description CDATA #IMPLIED
+    Type (Text|SplitText|MultiText|List|Select|MultiSelect) #IMPLIED
+    Format CDATA #IMPLIED
+    AllowEmpty (true|false) #IMPLIED
+    Separator CDATA #IMPLIED
+    Browse (None|File|Folder) #IMPLIED
+    Regexp CDATA #IMPLIED
+    Allow CDATA #IMPLIED
+    Deny CDATA #IMPLIED
+  >
+  <!ELEMENT Item (#PCDATA)>
+  <!ATTLIST Item
+    Name CDATA #IMPLIED
+    Disp CDATA #IMPLIED
+    Allow CDATA #IMPLIED
+    Deny CDATA #IMPLIED
+  >
+  <!ELEMENT Localize (Local*)>
+  <!ELEMENT Local (Tool*)>
+  <!ATTLIST Local Name CDATA #REQUIRED>
+  <!ELEMENT OptionValues (Build*)>
+  <!ELEMENT Build (Tool*)>
+  <!ATTLIST Build
+    Name CDATA #REQUIRED
+    Allow CDATA #IMPLIED
+    Deny CDATA #IMPLIED
+  >
+  <!ELEMENT DefaultValues (Tool*)>
+]>
+<Project Platform="CTR" Version="1.1.7.0" Type="Library">
+  <OptionList>
+    <Tool Name="General">
+      <Category Name="General">
+        <Option Name="Access path" Type="List" Regexp="^[_0-9a-zA-Z]+=.*$" />
+        <Option Name="Code generation" Type="Select" Deny="VertexShader|PCH">
+          <Item Name="fast">--arm -DNN_EFFORT_FAST -DNN_COMPILER_OPTION_ARM</Item>
+          <Item Name="small">--thumb -DNN_EFFORT_SMALL</Item>
+        </Option>
+        <Option Name="Optimize type" Type="Select" Deny="VertexShader|PCH">
+          <Item Name="fast">-Otime</Item>
+          <Item Name="small">-Ospace</Item>
+        </Option>
+      </Category>
+    </Tool>
+    <Tool Name="Compiler" Deny="VertexShader|PCH">
+      <Category Name="General">
+        <Option Name="Addtional include path" Type="MultiText" Format="-I&quot;${value}&quot;" Separator=";" Browse="Folder" />
+      </Category>
+      <Category Name="Optimize">
+        <Option Name="Optiomze level" Type="Select" Format="-O${value}">
+          <Item Name="0">0</Item>
+          <Item Name="1">1</Item>
+          <Item Name="2">2</Item>
+          <Item Name="3">3</Item>
+        </Option>
+        <Option Name="Optimize retain" Type="Select">
+          <Item Name="fns">--retain=fns</Item>
+          <Item Name="inlinefns">--retain=inlinefns</Item>
+          <Item Name="noninlinefns">--retain=noninlinefns</Item>
+          <Item Name="paths">--retain=paths</Item>
+          <Item Name="calls">--retain=calls</Item>
+          <Item Name="calls:distinct">--retain=calls:distinct</Item>
+          <Item Name="libcalls">--retain=libcalls</Item>
+          <Item Name="data">--retain=data</Item>
+          <Item Name="rodata">--retain=rodata</Item>
+          <Item Name="rwdata">--retain=rwdata</Item>
+          <Item Name="data:order">--retain=data:order</Item>
+          <Item Name="none">
+          </Item>
+        </Option>
+        <Option Name="Optimize type" Type="Text" />
+      </Category>
+      <Category Name="Pre procerssor">
+        <Option Name="Pre procerssor" Type="MultiText" Format="-D&quot;${value}&quot;" Separator=";" />
+        <Option Name="Disable Pre-procerssor symbol" Type="MultiText" Format="-U&quot;${value}&quot;" Separator=";" />
+        <Option Name="Pre include file" Type="MultiText" Format="--preinclude=&quot;${value}&quot;" Browse="File" Separator=";" />
+        <Option Name="System include" Type="Select">
+          <Item Name="True">--sys_include</Item>
+          <Item Name="False" />
+        </Option>
+      </Category>
+      <Category Name="Code genaration">
+        <Option Name="Support interwork" Type="Select">
+          <Item Name="True">--apcs=/interwork</Item>
+          <Item Name="False">--apcs=/nointerwork</Item>
+        </Option>
+        <Option Name="CPU" Type="Text" Format="--cpu ${value}" />
+        <Option Name="Split ELF sections" Type="Select">
+          <Item Name="True">--split_sections</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+        <Option Name="Endian" Type="Select">
+          <Item Name="big">--bigend</Item>
+          <Item Name="little">--littleend</Item>
+        </Option>
+      </Category>
+      <Category Name="Language">
+        <Option Name="Enable exception" Type="Select">
+          <Item Name="True">--exceptions</Item>
+          <Item Name="False">--no_exceptions</Item>
+        </Option>
+        <Option Name="Force new expr" Type="Select">
+          <Item Name="True">--force_new_nothrow</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+        <Option Name="GNU extensions" Type="Select">
+          <Item Name="True">--gnu</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+        <Option Name="Multi byte characters" Type="Select">
+          <Item Name="True">--multibyte_chars</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+        <Option Name="Support RTTI" Type="Select">
+          <Item Name="True">--rtti</Item>
+          <Item Name="False">--no_rtti</Item>
+        </Option>
+        <Option Name="[char] is signed" Type="Select">
+          <Item Name="True">--signed_chars</Item>
+          <Item Name="False">--unsigned_chars</Item>
+        </Option>
+        <Option Name="Enable delete vfunc" Type="Select">
+          <Item Name="True">--vfe</Item>
+          <Item Name="False">--no_vfe</Item>
+        </Option>
+        <Option Name="[wchar_t] is ushort" Type="Select">
+          <Item Name="True">--wchar16</Item>
+          <Item Name="False">--wchar32</Item>
+        </Option>
+        <Option Name="Dollar accept" Type="Select">
+          <Item Name="True">--dollar</Item>
+          <Item Name="False">--no_dollar</Item>
+        </Option>
+        <Option Name="[wchar_t] accept" Type="Select">
+          <Item Name="True">--wchar</Item>
+          <Item Name="False">--no_wchar</Item>
+        </Option>
+      </Category>
+      <Category Name="Pre compile">
+        <Option Name="PCH type" Type="Select">
+          <Item Name="Create">--create_pch=</Item>
+          <Item Name="Use">--use_pch=</Item>
+          <Item Name="None" />
+        </Option>
+        <Option Name="PCH file" Type="Text" Format="&quot;${value}&quot;" Browse="File" />
+      </Category>
+      <Category Name="Debug">
+        <Option Name="Create debug table" Type="Select">
+          <Item Name="True">--debug</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+        <Option Name="Create debug macro table" Type="Select">
+          <Item Name="True">--debug_macros</Item>
+          <Item Name="False">--no_debug_macros</Item>
+        </Option>
+        <Option Name="DWARF2" Type="Select">
+          <Item Name="DWARF2">--dwarf2</Item>
+          <Item Name="DWARF3">--dwarf3</Item>
+        </Option>
+        <Option Name="Remove Unneeded Symbol" Type="Select">
+          <Item Name="True">--remove_unneeded_entities</Item>
+          <Item Name="False">--no_remove_unneeded_entities</Item>
+        </Option>
+        <Option Name="Debug information" Type="MultiSelect" Format="--debug_info=${value}" Separator=",">
+          <Item Name="line_inlining_extensions">line_inlining_extensions</Item>
+        </Option>
+      </Category>
+      <Category Name="Message">
+        <Option Name="Disable diag error message" Type="SplitText" Format="--diag_error ${value}" Separator="," />
+        <Option Name="Message style" Type="Select" Format="--diag_style=${value}">
+          <Item Name="arm">arm</Item>
+          <Item Name="ide">ide</Item>
+          <Item Name="gnu">gnu</Item>
+        </Option>
+        <Option Name="Disable diag suppress message" Type="SplitText" Format="--diag_suppress ${value}" Separator="," />
+        <Option Name="Disable diag warning message" Type="SplitText" Format="--diag_warning ${value}" Separator="," />
+        <Option Name="Output remark message" Type="Select">
+          <Item Name="True">--remarks</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+      </Category>
+      <Category Name="Detail">
+        <Option Name="Data reorder" Type="Select">
+          <Item Name="True">--data_reorder</Item>
+          <Item Name="False">--no_data_reorder</Item>
+        </Option>
+        <Option Name="Floating point mode" Type="Select" Format="--fpmode=${value}">
+          <Item Name="ieee_full">ieee_full</Item>
+          <Item Name="ieee_fixed">ieee_fixed</Item>
+          <Item Name="ieee_no_fenv">ieee_no_fenv</Item>
+          <Item Name="fast">fast</Item>
+        </Option>
+        <Option Name="Unaligned access" Type="Select">
+          <Item Name="True">
+          </Item>
+          <Item Name="False">--no_unaligned_access</Item>
+        </Option>
+      </Category>
+      <Category Name="Command Line">
+        <Option Name="Additional options" Type="Text" />
+      </Category>
+    </Tool>
+    <Tool Name="Assembler" Deny="VertexShader|PCH">
+      <Category Name="C Preprocessor">
+        <Option Name="Using C Preprocessor" Type="Select">
+          <Item Name="True">-A"--cpreproc"</Item>
+          <Item Name="False">
+          </Item>
+        </Option>
+        <Option Name="Preprocerssor" Type="MultiText" Format="-D&quot;${value}&quot;" Separator=";">
+        </Option>
+        <Option Name="Include path" Type="MultiText" Format="-I&quot;${value}&quot;" Separator=";" Browse="Folder">
+        </Option>
+        <Option Name="Disable Preprocessor symbol" Type="MultiText" Format="-U&quot;${value}&quot;" Separator=";">
+        </Option>
+      </Category>
+      <Category Name="Advanced">
+        <Option Name="Assembler Include path" Type="SplitText" Format="-A&quot;-i&quot;${value}&quot;&quot;" Separator="," Browse="Folder">
+        </Option>
+        <Option Name="Additional options" Type="MultiText" Format="-A&quot;${value}&quot;" Separator="," />
+      </Category>
+    </Tool>
+    <Tool Name="Librarian" Allow="Library">
+      <Category Name="General">
+        <Option Name="Output file" Type="Text" Format="&quot;${value}&quot;" Browse="File" />
+        <Option Name="Archive option" Type="Text">
+        </Option>
+      </Category>
+      <Category Name="Message">
+        <Option Name="Message style" Type="Select" Format="--diag_style=${value}">
+          <Item Name="arm">arm</Item>
+          <Item Name="ide">ide</Item>
+          <Item Name="gnu">gnu</Item>
+        </Option>
+      </Category>
+      <Category Name="Command Line">
+        <Option Name="Additional options" Type="Text">
+        </Option>
+      </Category>
+    </Tool>
+  </OptionList>
+  <Localize>
+    <Local Name="eng">
+      <Tool Name="General">
+        <Category Name="General" Disp="General">
+          <Option Name="Access path" Disp="Reserved Name" Description="Set reserved name to use in property. Once the name is set to Reserved Name, when ${reserved name} is used in a property it will be replaced with the defined value." />
+          <Option Name="Code generation" Disp="Type of Code Generation" Description="Specify designated code generation option to compiler.&#xA;(fast:--arm, small:--thumb)" />
+          <Option Name="Library type" Disp="Type of Library" Description="Specify designated library to linker. &#xA;(fast:XXXX.fast.{a|o}, small:XXXX.small.{a|o})" />
+          <Option Name="Optimize type" Disp="Optimazation Type" Description="Specify designated optimize option to compiler.&#xA;(fast:-Otime, small:-Ospace)" />
+          <Option Name="FromElf" Disp="Create ELF Info" Description="Create ELF information using RVCT image conversion utility." />
+          <Option Name="Export Type" Disp="Export Type" Description="Specify the module export type." />
+        </Category>
+      </Tool>
+      <Tool Name="Compiler" Disp="Compiler" Deny="VertexShader|PCH">
+        <Category Name="General" Disp="General">
+          <Option Name="Addtional include path" Disp="Additional Include Directories" Description="Specifies one or more directories to add to the include path. Visual Studio Macro can be used. (Example:$(SolutionDir)\include). Use separator ';' to specify more than one. &#xA;(-Ipath)" />
+        </Category>
+        <Category Name="Optimize" Disp="Optimization">
+          <Option Name="Optiomze level" Disp="Optimization Level" Description="Specify optimization level &#xA;(-O{0|1|2|3})" />
+          <Option Name="Optimize retain" Disp="Restriction of optimization" Description="Restrict optimization &#xA;(--retain={fns|inlinefns|noninlinefns|paths|calls|calls:distinct|libcalls|data|rodata|rwdata|data:order})" />
+          <Option Name="Optimize type" Disp="Optimazation Type" Description="Specify the reservation name ${OptimizeType} replaced to optimization option specified by [General]-[Optimization Type]. &#xA;Please do not edit ${OptimizeType}." />
+        </Category>
+        <Category Name="Pre procerssor" Disp="Preprocessor">
+          <Option Name="Pre procerssor" Disp="Preprocessor Definitions" Description="Specifies one or more preprocessor defines. Use separator ';' to specify more than one. &#xA;(-Dname)" />
+          <Option Name="Disable Pre-procerssor symbol" Disp="Undefine Preprocessor Definitions" Description="Specifies one or more preprocessor undefines. Use separator ';' to specify more than one. &#xA;(-Uname)" />
+          <Option Name="Pre include file" Disp="Pre-include File" Description="Include source code of the specified file when compiling. Use separator ';' to specify more than one. &#xA;(--preinclude=file)" />
+          <Option Name="System include" Disp="System include" Description="Removes the current place from the include search path. &#xA;(True:--sys_include, False:)" />
+        </Category>
+        <Category Name="Code genaration" Disp="Code Generation">
+          <Option Name="Support interwork" Disp="Generation of Interworking Support Code" Description="Generate interworking support code. &#xA;(True:--apcs=/interwork, False:--apcs=/nointerwork)" />
+          <Option Name="CPU" Disp="CPU" Description="Generate code for the specified CPU. &#xA;(--cpu MPCore)" />
+          <Option Name="Split ELF sections" Disp="Generation of ELF selection" Description="Generate ELF section for each function in the source file. &#xA;(True:--split_sections, False:)" />
+          <Option Name="Endian" Disp="Endian" Description="Specify the endianness to use when generating code. &#xA;(big:--bigend, little:--littleend)" />
+        </Category>
+        <Category Name="Language" Disp="Language">
+          <Option Name="Enable exception" Disp="Exception Handling" Description="Enable exception handling &#xA;(True:--exceptions, False:--no_exceptions)" />
+          <Option Name="Force new expr" Disp="Control new Expressions" Description="Control the behavior of new expressions in C++. &#xA;(True:--force_new_nothrow, False:)" />
+          <Option Name="GNU extensions" Disp="GNU Extensions" Description="Enable GNU extensions. &#xA;(True:--gnu, False:)" />
+          <Option Name="Multi byte characters" Disp="Usage of Multibyte Character" Description="Use multibyte character. &#xA;(True:--multibyte_chars, False:)" />
+          <Option Name="Support RTTI" Disp="RTTI Feature" Description="Support RTTI feature dynamic_cast and typeid with C++. &#xA;(True:--rtti, False:--no_rtti)" />
+          <Option Name="[char] is signed" Disp="Default to signed char" Description="Sets whether char defaults to a signed or unsigned type. &#xA;(True:--signed_chars, False:--unsigned_chars)" />
+          <Option Name="Enable delete vfunc" Disp="C++ Virtual Function Elimination" Description="Enable Virtual Function Elimination in C++. &#xA;(True:--vfe, False:--no_vfe)" />
+          <Option Name="[wchar_t] is ushort" Disp="Default to Unsigned Short for wchar_t" Description="Set the default wchar_t type to unsigned short. &#xA;(True:--wchar16, False:--wchar32)" />
+          <Option Name="Dollar accept" Disp="Allows the usage of $ character at identifiers" Description="Allows the usage of $ character at identifiers. &#xA;(True:--dollar, False:--no_dollar)" />
+          <Option Name="[wchar_t] accept" Disp="Allows the usage of wchar_t" Description="Allows the usage of wchar_t. &#xA;(True:--wchar, False:--no_wchar)" />
+        </Category>
+        <Category Name="Pre compile" Disp="Precompiled Headers">
+          <Option Name="PCH type" Disp="Create/Use Precompiled Header" Description="Enables the creation and use of a precompiled header during the bulid. &#xA;(Create:--create_pch=filename, Use:--use_pch=filename, None:)" />
+          <Option Name="PCH file" Disp="Precompiled Header File" Description="Specifies the precompiled header file. &#xA;" />
+        </Category>
+        <Category Name="Debug" Disp="Debugging">
+          <Option Name="Create debug table" Disp="Generation of Debug Table" Description="Generate debug table. &#xA;(True:--debug, False:)" />
+          <Option Name="Create debug macro table" Disp="Generation of Debug Table for Preprocessor" Description="Generate debug table entries for preprocessor macro definitions. &#xA;(True:--debug_macros, False:--no_debug_macros)" />
+          <Option Name="DWARF2" Disp="Debug Table Format" Description="Specify debug table format. &#xA;(DWARF2:--dwarf2, DWARF3:--dwarf3)" />
+          <Option Name="Remove Unneeded Symbol" Disp="Remove Unused Symbols" Description="Remove unused symbols from debug information. &#xA;(True:--remove_unneeded_entities, False:--no_remove_unneeded_entities)" />
+          <Option Name="Debug information" Disp="Debug info" Description="Specify debug info to be output to debug table. &#xA;(--debug_info=info)" />
+        </Category>
+        <Category Name="Message" Disp="Message">
+          <Option Name="Disable diag error message" Disp="Setting Error Severity" Description="Set the diagnostic messages that have the specified numbers to Error severity. Use separator ',' to specify more than one. &#xA;(--diag_error num[,num...])" />
+          <Option Name="Message style" Disp="Display Style of Diagnostic Message" Description="Specify display style of diagnostic message. &#xA;(--diag_style={arm|ide|gnu})" />
+          <Option Name="Disable diag suppress message" Disp="Disable Diagnostic Messages" Description="Disable diagnostic messages that have the specified numbers. Use separator ',' to specify more than one.&#xA;(--diag_suppress num[,num...])" />
+          <Option Name="Disable diag warning message" Disp="Setting Warning Severity" Description="Set the diagnostic message that have specified numbers to Warning severity. Use separator ',' to specify more than one. &#xA;(--diag_warning num[,num...])" />
+          <Option Name="Output remark message" Disp="Remarks" Description="Display remark of warnings. &#xA;(True:--remarks, False:) " />
+        </Category>
+        <Category Name="Detail" Disp="Advanced">
+          <Option Name="Data reorder" Disp="Automatic Reordering of Data Items" Description="Reordering of top-level data items automatically. &#xA;(True:--data_reorder, False:--no_data_reorder)" />
+          <Option Name="Floating point mode" Disp="Compatibility of Floating-Point" Description="Sets library attributes and floating-point optimizations. &#xA;(--fpmode={ieee_full|ieee_fixed|ieee_no_fenv|fast})" />
+          <Option Name="Unaligned access" Disp="Unaligned Access to Data" Description="Enable unaligned access to data. &#xA;(True:, False:--no_unaligned_access)" />
+        </Category>
+        <Category Name="Command Line" Disp="Command Line">
+          <Option Name="Additional options" Disp="Additional options" Description="Specify additional options." />
+        </Category>
+      </Tool>
+      <Tool Name="Assembler" Deny="VertexShader|PCH">
+        <Category Name="C Preprocessor" Disp="C Preprocessor">
+          <Option Name="Using C Preprocessor" Disp="Using the C preprocessor" Description="Instructs the assembler to call armcc to preprocess the input file before assembling it.&#xA;(--cpreproc)" />
+          <Option Name="Preprocerssor" Disp="Preprocessor Definitions" Description="Specifies one or more preprocessor defines. Use separator ';' to specify more than one. &#xA;(--cpreproc_opts=-Dname,...)" />
+          <Option Name="Include path" Disp="Additional Include Directories" Description="Specifies one or more directories to add to the include path. Use separator ';' to specify more than one. &#xA;(--cpreproc_opts=-Ipath,...)" />
+          <Option Name="Disable Preprocessor symbol" Disp="Undefine Preprocessor Definitions" Description="Specifies one or more preprocessor undefines. Use separator ';' to specify more than one. &#xA;(--cpreproc_opts=-Uname,...)" />
+        </Category>
+        <Category Name="Advanced" Disp="Advanced">
+          <Option Name="Assembler Include path" Disp="GET or INCLUDE Directories" Description="Adds directories to the source file have to be fully qualified. Use separator ',' to specify more than one. &#xA;(-idir,...)" />
+          <Option Name="Additional options" Disp="Additional Options" Description="Specifies command-line options to pass to the assembler. Use separator ',' to specify more than one." />
+        </Category>
+      </Tool>
+      <Tool Name="Librarian" Disp="Librarian" Allow="Library">
+        <Category Name="General" Disp="General">
+          <Option Name="Output file" Disp="Output File" Description="Specify output file." />
+          <Option Name="Archive option" Disp="Archive options" Description="Specify archive option." />
+        </Category>
+        <Category Name="Message" Disp="Message">
+          <Option Name="Message style" Disp="Display Style of Diagnostic Message" Description="Specify display style of diagnostic message. &#xA;(--diag_style={arm|ide|gnu})" />
+        </Category>
+        <Category Name="Command Line" Disp="Command Line">
+          <Option Name="Additional options" Disp="Additional options" Description="Specify additional options." />
+        </Category>
+      </Tool>
+    </Local>
+    <Local Name="jpn">
+      <Tool Name="General" Disp="全般">
+        <Category Name="General" Disp="全般">
+          <Option Name="Access path" Disp="予約名" Description="プロパティに使用する予約名を設定します。予約名に名前を設定すると、ビルド時にプロパティに使用している${予約名}を定義値に置換します。" />
+          <Option Name="Code generation" Disp="コード生成の種類" Description="指定したコード生成オプションをコンパイラに指定します。&#xA;(fast:--arm, small:--thumb)" />
+          <Option Name="Optimize type" Disp="最適化の種類" Description="指定した最適化オプションをコンパイラに指定します。&#xA;(fast:-Otime, small:-Ospace)" />
+          <Option Name="FromElf" Disp="ELF情報作成" Description="RVCTイメージ変換ユーティリティを使用してELF情報を作成します。" />
+          <Option Name="Export Type" Disp="公開種別" Description="モジュールの公開種別を指定します。" />
+        </Category>
+      </Tool>
+      <Tool Name="Compiler" Disp="コンパイラ" Deny="VertexShader|PCH">
+        <Category Name="General" Disp="全般">
+          <Option Name="Addtional include path" Disp="追加のインクルード ディレクトリ" Description="インクルード パスに追加するディレクトリを指定します。Visual Studio マクロを使用することができます(例:$(SolutionDir)\include)。区切り文字';'を使用して複数指定できます。&#xA;(-Ipath)" />
+        </Category>
+        <Category Name="Optimize" Disp="最適化">
+          <Option Name="Optiomze level" Disp="最適化レベル" Description="最適化レベルを指定します。&#xA;(-O{0|1|2|3})" />
+          <Option Name="Optimize retain" Disp="最適化の制限" Description="最適化を制限します。&#xA;(--retain={fns|inlinefns|noninlinefns|paths|calls|calls:distinct|libcalls|data|rodata|rwdata|data:order})" />
+          <Option Name="Optimize type" Disp="最適化の種類" Description="予約名 ${OptimizeType}を[全般]-[最適化の種類]で指定した最適化オプションに置換して指定します。&#xA;${OptimizeType}は編集しないでください。" />
+        </Category>
+        <Category Name="Pre procerssor" Disp="プリプロセッサ">
+          <Option Name="Pre procerssor" Disp="プリプロセッサの定義" Description="プリプロセッサを定義します。区切り文字';'を使用して複数指定できます。&#xA;(-Dname)" />
+          <Option Name="Disable Pre-procerssor symbol" Disp="指定したプリプロセッサ定義の無効化" Description="特定のプリプロセッサの定義を無効します。区切り文字';'を使用して複数指定できます。&#xA;(-Uname)" />
+          <Option Name="Pre include file" Disp="プリインクルードファイル" Description="コンパイル時に指定したファイルのソースコードをインクルードします。区切り文字';'を使用して複数指定できます。&#xA;(--preinclude=file)" />
+          <Option Name="System include" Disp="システム インクルード" Description="現在の場所をインクルード検索パスから除外します。&#xA;(True:--sys_include, False:)" />
+        </Category>
+        <Category Name="Code genaration" Disp="コード生成">
+          <Option Name="Support interwork" Disp="インターワークサポートコードの生成" Description="インターワークサポートコードを生成します。&#xA;(True:--apcs=/interwork, False:--apcs=/nointerwork)" />
+          <Option Name="CPU" Disp="CPU" Description="指定したCPUのコードを生成します。&#xA;(--cpu MPCore)" />
+          <Option Name="Split ELF sections" Disp="ELFセクションの生成" Description="ソースファイルの関数ごとに、ELFセクションを生成します。&#xA;(True:--split_sections, False:)" />
+          <Option Name="Endian" Disp="エンディアン" Description="コード生成時のエンディアンを指定します。&#xA;(big:--bigend, little:--littleend)" />
+        </Category>
+        <Category Name="Language" Disp="言語">
+          <Option Name="Enable exception" Disp="例外処理" Description="例外処理を有効にします。&#xA;(True:--exceptions, False:--no_exceptions)" />
+          <Option Name="Force new expr" Disp="new式の制御" Description="new式の動作をC++で制御します。&#xA;(True:--force_new_nothrow, False:)" />
+          <Option Name="GNU extensions" Disp="GNU拡張機能" Description="GNU拡張機能を有効にします。&#xA;(True:--gnu, False:)" />
+          <Option Name="Multi byte characters" Disp="マルチバイト文字の使用" Description="マルチバイト文字を使用します。&#xA;(True:--multibyte_chars, False:)" />
+          <Option Name="Support RTTI" Disp="RTTI機能" Description="RTTI機能のdynamic_castとtypeidをC++でサポートします。&#xA;(True:--rtti, False:--no_rtti)" />
+          <Option Name="[char] is signed" Disp="char型を既定でsigned" Description="char型を既定でsignedにします。&#xA;(True:--signed_chars, False:--unsigned_chars)" />
+          <Option Name="Enable delete vfunc" Disp="C++仮想関数の削除" Description="C++での仮想関数の削除を有効にします。&#xA;(True:--vfe, False:--no_vfe)" />
+          <Option Name="[wchar_t] is ushort" Disp="wchar_t型を既定でunsigned short" Description="wchar_t型を既定でunsigned shortにします。&#xA;(True:--wchar16, False:--wchar32)" />
+          <Option Name="Dollar accept" Disp="識別子での$記号使用を許可" Description="識別子での$記号使用を許可します。&#xA;(True:--dollar, False:--no_dollar)" />
+          <Option Name="[wchar_t] accept" Disp="wchar_tの使用を許可" Description="wchar_tの使用を許可します。&#xA;(True:--wchar, False:--no_wchar)" />
+        </Category>
+        <Category Name="Pre compile" Disp="プリコンパイル済みヘッダー">
+          <Option Name="PCH type" Disp="プリコンパイル済みヘッダーの作成/使用" Description="ビルド時にプリコンパイル済みヘッダーを作成/使用します。&#xA;(Create:--create_pch=filename, Use:--use_pch=filename, None:)" />
+          <Option Name="PCH file" Disp="プリコンパイル済みヘッダー ファイル" Description="プリコンパイル済みヘッダー ファイルを指定します。&#xA;" />
+        </Category>
+        <Category Name="Debug" Disp="デバッグ">
+          <Option Name="Create debug table" Disp="デバッグテーブルの生成" Description="デバッグテーブルを生成します。&#xA;(True:--debug, False:)" />
+          <Option Name="Create debug macro table" Disp="プリプロセッサ用デバッグテーブルの生成" Description="プリプロセッサマクロ定義に関するデバッグテーブルエントリを生成します。&#xA;(True:--debug_macros, False:--no_debug_macros)" />
+          <Option Name="DWARF2" Disp="デバッグテーブルの形式" Description="デバッグテーブルの形式を指定します。&#xA;(DWARF2:--dwarf2, DWARF3:--dwarf3)" />
+          <Option Name="Remove Unneeded Symbol" Disp="未使用シンボルの削除" Description="使用していないシンボルをデバッグ情報から削除します。&#xA;(True:--remove_unneeded_entities, False:--no_remove_unneeded_entities)" />
+          <Option Name="Debug information" Disp="デバッグ情報" Description="デバッグテーブルに出力するデバッグ情報を指定します。 &#xA;(--debug_info=info)" />
+        </Category>
+        <Category Name="Message" Disp="メッセージ">
+          <Option Name="Disable diag error message" Disp="エラーの重大度設定" Description="指定された番号の診断メッセージにエラーの重大度を設定します。区切り文字','を使用して複数指定できます。&#xA;(--diag_error num[,num...])" />
+          <Option Name="Message style" Disp="診断メッセージの表示形式" Description="診断メッセージの表示形式を指定します。&#xA;(--diag_style={arm|ide|gnu})" />
+          <Option Name="Disable diag suppress message" Disp="診断メッセージの非表示化" Description="指定された番号の診断メッセージを非表示にします。区切り文字','を使用して複数指定できます。&#xA;(--diag_suppress num[,num...])" />
+          <Option Name="Disable diag warning message" Disp="警告の重大度設定" Description="指定された番号の診断メッセージに警告の重大度を設定します。区切り文字','を使用して複数指定できます。&#xA;(--diag_warning num[,num...])" />
+          <Option Name="Output remark message" Disp="注釈メッセージ" Description="警告などの注釈メッセージを表示します。&#xA;(True:--remarks, False:)" />
+        </Category>
+        <Category Name="Detail" Disp="詳細">
+          <Option Name="Data reorder" Disp="データ項目の自動再順序付け" Description="トップレベルのデータ項目の自動再順序付けを行います。&#xA;(True:--data_reorder, False:--no_data_reorder)" />
+          <Option Name="Floating point mode" Disp="浮動小数点の適合性" Description="ライブラリの属性と浮動小数点の最適化を設定します。&#xA;(--fpmode={ieee_full|ieee_fixed|ieee_no_fenv|fast})" />
+          <Option Name="Unaligned access" Disp="データへの非境界整列アクセス" Description="データへの非境界整列アクセスを有効にします。&#xA;(True:, False:--no_unaligned_access)" />
+        </Category>
+        <Category Name="Command Line" Disp="コマンドライン">
+          <Option Name="Additional options" Disp="追加のオプション" Description="追加のオプションを指定します。" />
+        </Category>
+      </Tool>
+      <Tool Name="Assembler" Disp="アセンブラ" Deny="VertexShader|PCH">
+        <Category Name="C Preprocessor" Disp="C プリプロセッサ">
+          <Option Name="Using C Preprocessor" Disp="C プリプロセッサを使用" Description="入力ファイルを前処理してからアセンブルするために armcc を呼び出すようアセンブラに指示します。&#xA;(--cpreproc)" />
+          <Option Name="Preprocerssor" Disp="プリプロセッサの定義" Description="プリプロセッサを定義します。区切り文字';'を使用して複数指定できます。&#xA;(--cpreproc_opts=-Dname,...)" />
+          <Option Name="Include path" Disp="追加のインクルード ディレクトリ" Description="インクルード パスに追加するディレクトリを指定します。区切り文字';'を使用して複数指定できます。&#xA;(--cpreproc_opts=-Ipath,...)" />
+          <Option Name="Disable Preprocessor symbol" Disp="指定したプリプロセッサ定義の無効化" Description="特定のプリプロセッサの定義を無効にします。区切り文字';'を使用して複数指定できます。&#xA;(--cpreproc_opts=-Uname,...)" />
+        </Category>
+        <Category Name="Advanced" Disp="詳細">
+          <Option Name="Assembler Include path" Disp="GET、INCLUDE ディレクトリ" Description="ソースファイルにディレクトリを追加して完全修飾名を付けます。区切り文字','を使用して複数指定できます。&#xA;(-idir,...)" />
+          <Option Name="Additional options" Disp="追加のオプション" Description="アセンブラに渡すコマンドラインオプションを指定します。区切り文字','を使用して複数指定できます。" />
+        </Category>
+      </Tool>
+      <Tool Name="Librarian" Disp="ライブラリアン" Allow="Library">
+        <Category Name="General" Disp="全般">
+          <Option Name="Output file" Disp="出力ファイル" Description="出力ファイルを指定します。" />
+          <Option Name="Archive option" Disp="アーカイブオプション" Description="アーカイブオプションを指定します。" />
+        </Category>
+        <Category Name="Message" Disp="メッセージ">
+          <Option Name="Message style" Disp="診断メッセージの表示形式" Description="診断メッセージの表示形式を指定します。&#xA;(--diag_style={arm|ide|gnu})" />
+        </Category>
+        <Category Name="Command Line" Disp="コマンドライン">
+          <Option Name="Additional options" Disp="追加のオプション" Description="追加のオプションを指定します。" />
+        </Category>
+      </Tool>
+    </Local>
+  </Localize>
+  <OptionValues>
+    <Build Name="CTR Debug">
+      <Tool Name="General">
+        <Option Name="Access path">
+        </Option>
+        <Option Name="Code generation" Deny="VertexShader|PCH">fast</Option>
+        <Option Name="Optimize type" Deny="VertexShader|PCH">fast</Option>
+      </Tool>
+      <Tool Name="Compiler" Deny="VertexShader|PCH">
+        <Option Name="Addtional include path">.;$(CTRSDK_ROOT)\include;$(ARMCC41INC)</Option>
+        <Option Name="GNU extensions">True</Option>
+        <Option Name="Multi byte characters">True</Option>
+        <Option Name="Support interwork">True</Option>
+        <Option Name="Data reorder">True</Option>
+        <Option Name="Create debug table">True</Option>
+        <Option Name="Create debug macro table">False</Option>
+        <Option Name="Message style">ide</Option>
+        <Option Name="DWARF2">DWARF3</Option>
+        <Option Name="Debug information">line_inlining_extensions</Option>
+        <Option Name="Enable exception">False</Option>
+        <Option Name="Force new expr">True</Option>
+        <Option Name="Floating point mode">fast</Option>
+        <Option Name="Output remark message">True</Option>
+        <Option Name="Support RTTI">False</Option>
+        <Option Name="[char] is signed">True</Option>
+        <Option Name="Unaligned access">True</Option>
+        <Option Name="Enable delete vfunc">True</Option>
+        <Option Name="[wchar_t] is ushort">True</Option>
+        <Option Name="Dollar accept">True</Option>
+        <Option Name="[wchar_t] accept">True</Option>
+        <Option Name="Disable diag suppress message">186,340,401,1256,1297,1568,1764,1786,1788,2523,96,1794,1801,2442,3017,optimizations</Option>
+        <Option Name="Disable diag error message">68,88,174,188,223</Option>
+        <Option Name="Disable diag warning message">177,193,228,550,826,1301</Option>
+        <Option Name="Split ELF sections">True</Option>
+        <Option Name="Endian">little</Option>
+        <Option Name="Pre procerssor">NN_BUILD_DEBUG;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=4;NN_COMPILER_RVCT_VERSION_MINOR=1;NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_ENABLE_HOST_IO=1;NN_BUILD_VERBOSE;NN_BUILD_NOOPT;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</Option>
+        <Option Name="Disable Pre-procerssor symbol">
+        </Option>
+        <Option Name="Remove Unneeded Symbol">True</Option>
+        <Option Name="Optiomze level">0</Option>
+        <Option Name="Optimize retain">calls</Option>
+        <Option Name="Optimize type">${OptimizeType}</Option>
+        <Option Name="CPU">MPCore</Option>
+        <Option Name="PCH type">None</Option>
+        <Option Name="PCH file" />
+        <Option Name="Pre include file">
+        </Option>
+        <Option Name="System include">False</Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+      <Tool Name="Assembler" Deny="VertexShader|PCH">
+        <Option Name="Using C Preprocessor">True</Option>
+        <Option Name="Preprocerssor">
+        </Option>
+        <Option Name="Include path">
+        </Option>
+        <Option Name="Disable Preprocessor symbol">
+        </Option>
+        <Option Name="Assembler Include path">
+        </Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+      <Tool Name="Librarian" Allow="Library">
+        <Option Name="Output file">$(OutDir)\lib_lua.fast.a</Option>
+        <Option Name="Archive option">-rcuT</Option>
+        <Option Name="Message style">ide</Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+    </Build>
+    <Build Name="CTR Development">
+      <Tool Name="General">
+        <Option Name="Access path">
+        </Option>
+        <Option Name="Code generation" Deny="VertexShader|PCH">fast</Option>
+        <Option Name="Optimize type" Deny="VertexShader|PCH">fast</Option>
+      </Tool>
+      <Tool Name="Compiler" Deny="VertexShader|PCH">
+        <Option Name="Addtional include path">.;$(CTRSDK_ROOT)\include;$(ARMCC41INC)</Option>
+        <Option Name="GNU extensions">True</Option>
+        <Option Name="Multi byte characters">True</Option>
+        <Option Name="Support interwork">True</Option>
+        <Option Name="Data reorder">True</Option>
+        <Option Name="Create debug table">True</Option>
+        <Option Name="Create debug macro table">False</Option>
+        <Option Name="Message style">ide</Option>
+        <Option Name="DWARF2">DWARF3</Option>
+        <Option Name="Debug information">line_inlining_extensions</Option>
+        <Option Name="Enable exception">False</Option>
+        <Option Name="Force new expr">True</Option>
+        <Option Name="Floating point mode">fast</Option>
+        <Option Name="Output remark message">True</Option>
+        <Option Name="Support RTTI">False</Option>
+        <Option Name="[char] is signed">True</Option>
+        <Option Name="Unaligned access">True</Option>
+        <Option Name="Enable delete vfunc">True</Option>
+        <Option Name="[wchar_t] is ushort">True</Option>
+        <Option Name="Dollar accept">True</Option>
+        <Option Name="[wchar_t] accept">True</Option>
+        <Option Name="Disable diag suppress message">186,340,401,1256,1297,1568,1764,1786,1788,2523,96,1794,1801,2442,3017,optimizations</Option>
+        <Option Name="Disable diag error message">68,88,174,188,223</Option>
+        <Option Name="Disable diag warning message">177,193,228,550,826,1301</Option>
+        <Option Name="Split ELF sections">True</Option>
+        <Option Name="Endian">little</Option>
+        <Option Name="Pre procerssor">NN_BUILD_DEVELOPMENT;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=4;NN_COMPILER_RVCT_VERSION_MINOR=1;NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_ENABLE_HOST_IO=1;NN_BUILD_VERBOSE;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</Option>
+        <Option Name="Disable Pre-procerssor symbol">
+        </Option>
+        <Option Name="Remove Unneeded Symbol">True</Option>
+        <Option Name="Optiomze level">0</Option>
+        <Option Name="Optimize retain">calls</Option>
+        <Option Name="Optimize type">${OptimizeType}</Option>
+        <Option Name="CPU">MPCore</Option>
+        <Option Name="PCH type">None</Option>
+        <Option Name="PCH file" />
+        <Option Name="Pre include file">
+        </Option>
+        <Option Name="System include">False</Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+      <Tool Name="Assembler" Deny="VertexShader|PCH">
+        <Option Name="Using C Preprocessor">True</Option>
+        <Option Name="Preprocerssor">
+        </Option>
+        <Option Name="Include path">
+        </Option>
+        <Option Name="Disable Preprocessor symbol">
+        </Option>
+        <Option Name="Assembler Include path">
+        </Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+      <Tool Name="Librarian" Allow="Library">
+        <Option Name="Output file">$(OutDir)\lib_lua.fast.a</Option>
+        <Option Name="Archive option">-rcuT</Option>
+        <Option Name="Message style">ide</Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+    </Build>
+    <Build Name="CTR Release">
+      <Tool Name="General">
+        <Option Name="Access path">
+        </Option>
+        <Option Name="Code generation" Deny="VertexShader|PCH">fast</Option>
+        <Option Name="Optimize type" Deny="VertexShader|PCH">fast</Option>
+      </Tool>
+      <Tool Name="Compiler" Deny="VertexShader|PCH">
+        <Option Name="Addtional include path">.;$(CTRSDK_ROOT)\include;$(ARMCC41INC)</Option>
+        <Option Name="GNU extensions">True</Option>
+        <Option Name="Multi byte characters">True</Option>
+        <Option Name="Support interwork">True</Option>
+        <Option Name="Data reorder">True</Option>
+        <Option Name="Create debug table">True</Option>
+        <Option Name="Create debug macro table">False</Option>
+        <Option Name="Message style">ide</Option>
+        <Option Name="DWARF2">DWARF3</Option>
+        <Option Name="Debug information">line_inlining_extensions</Option>
+        <Option Name="Enable exception">False</Option>
+        <Option Name="Force new expr">True</Option>
+        <Option Name="Floating point mode">fast</Option>
+        <Option Name="Output remark message">True</Option>
+        <Option Name="Support RTTI">False</Option>
+        <Option Name="[char] is signed">True</Option>
+        <Option Name="Unaligned access">True</Option>
+        <Option Name="Enable delete vfunc">True</Option>
+        <Option Name="[wchar_t] is ushort">True</Option>
+        <Option Name="Dollar accept">True</Option>
+        <Option Name="[wchar_t] accept">True</Option>
+        <Option Name="Disable diag suppress message">186,340,401,1256,1297,1568,1764,1786,1788,2523,96,1794,1801,2442,3017,optimizations</Option>
+        <Option Name="Disable diag error message">68,88,174,188,223</Option>
+        <Option Name="Disable diag warning message">177,193,228,550,826,1301</Option>
+        <Option Name="Split ELF sections">True</Option>
+        <Option Name="Endian">little</Option>
+        <Option Name="Pre procerssor">NN_BUILD_RELEASE;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=4;NN_COMPILER_RVCT_VERSION_MINOR=1;NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_DISABLE_DEBUG_PRINT=1;NN_SWITCH_DISABLE_DEBUG_PRINT_FOR_SDK=1;NN_SWITCH_DISABLE_ASSERT_WARNING=1;NN_SWITCH_DISABLE_ASSERT_WARNING_FOR_SDK=1;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</Option>
+        <Option Name="Disable Pre-procerssor symbol">
+        </Option>
+        <Option Name="Remove Unneeded Symbol">True</Option>
+        <Option Name="Optiomze level">3</Option>
+        <Option Name="Optimize retain">none</Option>
+        <Option Name="Optimize type">${OptimizeType}</Option>
+        <Option Name="CPU">MPCore</Option>
+        <Option Name="PCH type">None</Option>
+        <Option Name="PCH file" />
+        <Option Name="Pre include file">
+        </Option>
+        <Option Name="System include">False</Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+      <Tool Name="Assembler" Deny="VertexShader|PCH">
+        <Option Name="Using C Preprocessor">True</Option>
+        <Option Name="Preprocerssor">
+        </Option>
+        <Option Name="Include path">
+        </Option>
+        <Option Name="Disable Preprocessor symbol">
+        </Option>
+        <Option Name="Assembler Include path">
+        </Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+      <Tool Name="Librarian" Allow="Library">
+        <Option Name="Output file">$(OutDir)\lib_lua.fast.a</Option>
+        <Option Name="Archive option">-rcuT</Option>
+        <Option Name="Message style">ide</Option>
+        <Option Name="Additional options">
+        </Option>
+      </Tool>
+    </Build>
+  </OptionValues>
+  <DefaultValues>
+    <Tool Name="General">
+      <Option Name="Access path">
+      </Option>
+      <Option Name="Code generation" Deny="VertexShader|PCH">fast</Option>
+      <Option Name="Optimize type" Deny="VertexShader|PCH">fast</Option>
+    </Tool>
+    <Tool Name="Compiler" Deny="VertexShader|PCH">
+      <Option Name="Addtional include path">.;$(CTRSDK_ROOT)\include</Option>
+      <Option Name="GNU extensions">
+      </Option>
+      <Option Name="Multi byte characters">True</Option>
+      <Option Name="Support interwork">True</Option>
+      <Option Name="Data reorder">True</Option>
+      <Option Name="Create debug table">True</Option>
+      <Option Name="Create debug macro table">False</Option>
+      <Option Name="Message style">ide</Option>
+      <Option Name="DWARF2">DWARF3</Option>
+      <Option Name="Debug information">line_inlining_extensions</Option>
+      <Option Name="Enable exception">False</Option>
+      <Option Name="Force new expr">True</Option>
+      <Option Name="Floating point mode">fast</Option>
+      <Option Name="Output remark message">True</Option>
+      <Option Name="Support RTTI">False</Option>
+      <Option Name="[char] is signed">True</Option>
+      <Option Name="Unaligned access">True</Option>
+      <Option Name="Enable delete vfunc">True</Option>
+      <Option Name="[wchar_t] is ushort">True</Option>
+      <Option Name="Dollar accept">True</Option>
+      <Option Name="[wchar_t] accept">True</Option>
+      <Option Name="Disable diag suppress message">186,340,401,1256,1297,1568,1764,1786,1788,2523,96,1794,1801,2442,3017,optimizations</Option>
+      <Option Name="Disable diag error message">68,88,174,188,223</Option>
+      <Option Name="Disable diag warning message">177,193,228,550,826,1301</Option>
+      <Option Name="Split ELF sections">True</Option>
+      <Option Name="Endian">little</Option>
+      <Option Name="Pre procerssor">
+      </Option>
+      <Option Name="Disable Pre-procerssor symbol">
+      </Option>
+      <Option Name="Remove Unneeded Symbol">True</Option>
+      <Option Name="Optiomze level">
+      </Option>
+      <Option Name="Optimize retain">
+      </Option>
+      <Option Name="Optimize type">${OptimizeType}</Option>
+      <Option Name="CPU">MPCore</Option>
+      <Option Name="PCH type">None</Option>
+      <Option Name="PCH file" />
+      <Option Name="Pre include file">
+      </Option>
+      <Option Name="System include">False</Option>
+      <Option Name="Additional options">
+      </Option>
+    </Tool>
+    <Tool Name="Assembler" Deny="VertexShader|PCH">
+      <Option Name="Using C Preprocessor">True</Option>
+      <Option Name="Preprocerssor">
+      </Option>
+      <Option Name="Include path">
+      </Option>
+      <Option Name="Disable Preprocessor symbol">
+      </Option>
+      <Option Name="Assembler Include path">
+      </Option>
+      <Option Name="Additional options">
+      </Option>
+    </Tool>
+    <Tool Name="Librarian" Allow="Library">
+      <Option Name="Output file">$(OutDir)\$(ProjectName).a</Option>
+      <Option Name="Archive option">-rcuT</Option>
+      <Option Name="Message style">ide</Option>
+      <Option Name="Additional options">
+      </Option>
+    </Tool>
+  </DefaultValues>
+</Project>

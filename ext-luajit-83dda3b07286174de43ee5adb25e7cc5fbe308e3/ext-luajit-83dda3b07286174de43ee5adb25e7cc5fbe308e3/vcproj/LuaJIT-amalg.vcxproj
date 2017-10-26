@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|CTR">
+      <Configuration>Debug</Configuration>
+      <Platform>CTR</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Develop|CTR">
+      <Configuration>Develop</Configuration>
+      <Platform>CTR</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Develop|Win32">
+      <Configuration>Develop</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|CTR">
+      <Configuration>Release</Configuration>
+      <Platform>CTR</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D51698B5-AA5A-44AE-8518-EBFF901E792C}</ProjectGuid>
+    <RootNamespace>LuaJIT-amalg</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|CTR'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>CTR-SDK5.2.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>CTR-SDK5.2.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|CTR'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>CTR-SDK5.2.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>CTR-SDK5.2.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|CTR'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>CTR-SDK5.2.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>CTR-SDK5.2.0</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ctr2_asm.props" Condition="(exists('$(VCTargetsPath)\BuildCustomizations\ctr2_asm.props') and '$(ConfigurationType)' != 'VertexShader' and '$(ConfigurationType)' != 'PCH')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|CTR'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Develop|CTR'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|CTR'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|CTR'">
+    <PreBuildEvent>
+      <Message>Building LuaJIT bootstrap...</Message>
+      <Command>..\src\ctrbuild.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <OptimizeLevel>0</OptimizeLevel>
+      <OptimizeRetain>calls</OptimizeRetain>
+      <PreprocessorDefinitions>NN_BUILD_DEBUG;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=$(CTRSDK_RVCT_VAR_MAJOR);NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_ENABLE_HOST_IO=1;NN_BUILD_VERBOSE;NN_BUILD_NOOPT;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</PreprocessorDefinitions>
+      <GNU_Extensions>True</GNU_Extensions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ARMCC41INC)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Message>Building LuaJIT bootstrap...</Message>
+      <Command>..\src\ctrbuild.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <OptimizeLevel>0</OptimizeLevel>
+      <OptimizeRetain>calls</OptimizeRetain>
+      <PreprocessorDefinitions>NN_BUILD_DEBUG;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=$(CTRSDK_RVCT_VAR_MAJOR);NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_ENABLE_HOST_IO=1;NN_BUILD_VERBOSE;NN_BUILD_NOOPT;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</PreprocessorDefinitions>
+      <GNU_Extensions>True</GNU_Extensions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ARMCC41INC)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|CTR'">
+    <PreBuildEvent>
+      <Message>Building LuaJIT bootstrap...</Message>
+      <Command>..\src\ctrbuild.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <OptimizeLevel>0</OptimizeLevel>
+      <OptimizeRetain>calls</OptimizeRetain>
+      <PreprocessorDefinitions>NN_BUILD_DEVELOPMENT;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=$(CTRSDK_RVCT_VAR_MAJOR);NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_ENABLE_HOST_IO=1;NN_BUILD_VERBOSE;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</PreprocessorDefinitions>
+      <GNU_Extensions>True</GNU_Extensions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ARMCC41INC)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
+    <PreBuildEvent>
+      <Message>Building LuaJIT bootstrap...</Message>
+      <Command>..\src\ctrbuild.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <OptimizeLevel>0</OptimizeLevel>
+      <OptimizeRetain>calls</OptimizeRetain>
+      <PreprocessorDefinitions>NN_BUILD_DEVELOPMENT;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=$(CTRSDK_RVCT_VAR_MAJOR);NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_ENABLE_HOST_IO=1;NN_BUILD_VERBOSE;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</PreprocessorDefinitions>
+      <GNU_Extensions>True</GNU_Extensions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ARMCC41INC)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|CTR'">
+    <PreBuildEvent>
+      <Message>Building LuaJIT bootstrap...</Message>
+      <Command>..\src\ctrbuild.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <OptimizeLevel>3</OptimizeLevel>
+      <OptimizeRetain>none</OptimizeRetain>
+      <PreprocessorDefinitions>NN_BUILD_RELEASE;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=$(CTRSDK_RVCT_VAR_MAJOR);NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_DISABLE_DEBUG_PRINT=1;NN_SWITCH_DISABLE_DEBUG_PRINT_FOR_SDK=1;NN_SWITCH_DISABLE_ASSERT_WARNING=1;NN_SWITCH_DISABLE_ASSERT_WARNING_FOR_SDK=1;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</PreprocessorDefinitions>
+      <GNU_Extensions>True</GNU_Extensions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ARMCC41INC)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Message>Building LuaJIT bootstrap...</Message>
+      <Command>..\src\ctrbuild.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <OptimizeLevel>3</OptimizeLevel>
+      <OptimizeRetain>none</OptimizeRetain>
+      <PreprocessorDefinitions>NN_BUILD_RELEASE;NN_COMPILER_RVCT;NN_COMPILER_RVCT_VERSION_MAJOR=$(CTRSDK_RVCT_VAR_MAJOR);NN_PROCESSOR_ARM;NN_PROCESSOR_ARM11MPCORE;NN_PROCESSOR_ARM_V6;NN_PROCESSOR_ARM_VFP_V2;NN_HARDWARE_CTR;NN_PLATFORM_CTR;NN_HARDWARE_CTR_TS;NN_SYSTEM_PROCESS;NN_SWITCH_DISABLE_DEBUG_PRINT=1;NN_SWITCH_DISABLE_DEBUG_PRINT_FOR_SDK=1;NN_SWITCH_DISABLE_ASSERT_WARNING=1;NN_SWITCH_DISABLE_ASSERT_WARNING_FOR_SDK=1;NN_DEBUGGER_KMC_PARTNER;LJ_TARGET_CTR;LUAJIT_NO_UNWIND;LUAJIT_DISABLE_FFI;LUAJIT_DISABLE_JIT;LUAJIT_TARGET=LUAJIT_ARCH_arm;LJ_ARCH_HASFPU;__ARM_ARCH_6__;__ARM_EABI__;LUAJIT_USE_SYSMALLOC</PreprocessorDefinitions>
+      <GNU_Extensions>True</GNU_Extensions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ARMCC41INC)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CTR_Custom_Build_Assembler Include="..\src\lj_vm.s" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\ljamalg.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ctr2_asm.targets" Condition="(exists('$(VCTargetsPath)\BuildCustomizations\ctr2_asm.targets') and '$(ConfigurationType)' != 'VertexShader' and '$(ConfigurationType)' != 'PCH')" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ctr2_items.targets" Condition="exists('$(VCTargetsPath)\BuildCustomizations\ctr2_items.targets')" />
+  </ImportGroup>
+</Project>

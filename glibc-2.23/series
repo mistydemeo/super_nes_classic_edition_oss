@@ -1,0 +1,4 @@
+0001-fix-CVE-2016-3075.patch
+0002-gcc6.patch
+0003-MIPS-SPARC-fix-wrong-vfork-aliases-in-libpthread.so.patch
+0004-MIPS-SPARC-more-fixes-to-the-vfork-aliases-in-libpth.patch

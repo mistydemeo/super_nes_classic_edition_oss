@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+
+import smbus, time, sys
+
+bus = smbus.SMBus(1)
+address = 0x52
+
+def set_data_format(val):
+    bus.write_byte_data(address, 0xFE, val)
+    print "Set data format ", val
+
+set_data_format(int(sys.argv[1]))

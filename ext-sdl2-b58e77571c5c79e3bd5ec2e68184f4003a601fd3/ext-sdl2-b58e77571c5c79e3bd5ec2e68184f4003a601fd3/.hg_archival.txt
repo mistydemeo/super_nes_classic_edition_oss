@@ -1,0 +1,6 @@
+repo: 74212992fb0868a6929180cd74dd67e38507340a
+node: b58e77571c5c79e3bd5ec2e68184f4003a601fd3
+branch: nerd
+latesttag: release-2.0.4
+latesttagdistance: 38
+changessincelatesttag: 70

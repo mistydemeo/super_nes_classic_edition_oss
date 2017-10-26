@@ -1,0 +1,5 @@
+0001-musl-pcm-h.patch
+0002-no-mmu.patch
+0003-dlmisc.patch
+0004-conditional-enabling-of-libdl-in-m4.patch
+0005-remove-powerpc64-workaround.patch

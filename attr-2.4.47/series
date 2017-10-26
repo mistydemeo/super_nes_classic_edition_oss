@@ -1,0 +1,3 @@
+0001-support-static-installation.patch
+0002-avoid-glibc-specific-decls-defines.patch
+0003-portability-fixes.patch

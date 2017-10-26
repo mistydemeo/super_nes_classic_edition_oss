@@ -1,0 +1,5 @@
+0001-allow-building-of-the-shared-library-to-be-suppressed.patch
+0002-fix-install-rule.patch
+0003-cifs.patch
+0004-Makefile-for-buildroot.patch
+0005-Add-missing-limits.h-include.patch

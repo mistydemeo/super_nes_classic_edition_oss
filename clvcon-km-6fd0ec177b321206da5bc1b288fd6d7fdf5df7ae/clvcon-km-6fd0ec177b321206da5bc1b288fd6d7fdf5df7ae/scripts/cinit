@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+
+import smbus, time
+
+bus = smbus.SMBus(1)
+address = 0x52
+
+def init():
+    bus.write_byte_data(address, 0xF0, 0x55)
+    bus.write_byte_data(address, 0xFB, 0x00)
+
+init()

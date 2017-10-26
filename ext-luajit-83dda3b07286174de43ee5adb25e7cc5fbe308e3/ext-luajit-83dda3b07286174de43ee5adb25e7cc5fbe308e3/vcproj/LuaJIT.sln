@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaJIT", "LuaJIT.vcxproj", "{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaJIT-amalg", "LuaJIT-amalg.vcxproj", "{D51698B5-AA5A-44AE-8518-EBFF901E792C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|CTR = Debug|CTR
+		Debug|Win32 = Debug|Win32
+		Develop|CTR = Develop|CTR
+		Develop|Win32 = Develop|Win32
+		Release|CTR = Release|CTR
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Debug|CTR.ActiveCfg = Debug|CTR
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Debug|CTR.Build.0 = Debug|CTR
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Debug|Win32.Build.0 = Debug|Win32
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Develop|CTR.ActiveCfg = Develop|CTR
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Develop|CTR.Build.0 = Develop|CTR
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Develop|Win32.ActiveCfg = Develop|Win32
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Develop|Win32.Build.0 = Develop|Win32
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Release|CTR.ActiveCfg = Release|CTR
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Release|CTR.Build.0 = Release|CTR
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Release|Win32.ActiveCfg = Release|Win32
+		{3E4B31A6-10BA-4255-8CE5-73FF20D955A1}.Release|Win32.Build.0 = Release|Win32
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Debug|CTR.ActiveCfg = Debug|CTR
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Debug|CTR.Build.0 = Debug|CTR
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Debug|Win32.Build.0 = Debug|Win32
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Develop|CTR.ActiveCfg = Develop|CTR
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Develop|CTR.Build.0 = Develop|CTR
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Develop|Win32.ActiveCfg = Develop|Win32
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Develop|Win32.Build.0 = Develop|Win32
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Release|CTR.ActiveCfg = Release|CTR
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Release|CTR.Build.0 = Release|CTR
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Release|Win32.ActiveCfg = Release|Win32
+		{D51698B5-AA5A-44AE-8518-EBFF901E792C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
